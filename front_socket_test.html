@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket Ticker Test</title>
+</head>
+<body>
+  <h2>실시간 코인 데이터 콘솔 확인</h2>
+  <script>
+    const socket = new WebSocket("ws://localhost:8081/ws");
+
+    socket.onopen = () => {
+      console.log("✅ 연결됨");
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log(`[${data.code}] 가격: ${data.trade_price}, 거래량: ${data.acc_trade_volume}`);
+    };
+
+    socket.onclose = () => {
+      console.log("❌ 연결 종료됨");
+    };
+
+    socket.onerror = (err) => {
+      console.error("에러 발생:", err);
+    };
+  </script>
+</body>
+</html>
