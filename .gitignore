@@ -28,8 +28,8 @@ go.work.sum
 .env
 
 #docker
-Dockerfile
-.dockerignore
+# Dockerfile
+# .dockerignore
 
 # Editor/IDE
 # .idea/
