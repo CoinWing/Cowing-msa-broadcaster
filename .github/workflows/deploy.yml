@@ -1,0 +1,27 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Connect to Remote Server and Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /Users/프로젝트 경로~
+            git pull origin main
+            docker stop proxy-broadcast || true
+            docker rm proxy-broadcast || true
+            docker build -t proxy-broadcast .
+            docker run -d -p 8081:8081 --name proxy-broadcast proxy-broadcast
