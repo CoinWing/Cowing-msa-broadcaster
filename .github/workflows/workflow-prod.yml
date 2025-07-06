@@ -52,3 +52,28 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ steps.image_name.outputs.image_name }}:${{ steps.version.outputs.version }}
             ${{ env.REGISTRY }}/${{ steps.image_name.outputs.image_name }}:latest 
+
+      - name: Send Discord message on Success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{"content":"✅ Broadcast 소켓 서버 이미지 빌드/푸시 성공! 🎉"}' \
+          https://discord.com/api/webhooks/1390598514014163077/exggNPQZfZxyQ3e0gliUN7WI7gaZ2cqHvgD2-6ynoa8KKQ0FKpyveGdMEBU7QgA62P-0
+        # secrets.DISCORD_WEBSOCKET_WEBHOOK_URL <- 변수 생성 후 변경
+
+      - name: Read error log summary
+        if: failure()
+        run: |
+          echo "소켓 서버 이미지 빌드 또는 푸시 중 오류 발생" > short_error.log
+
+      - name: Send Discord failure alert
+        if: failure()
+        run: |
+          LOG=$(cat short_error.log)
+          ESCAPED_LOG=$(echo "$LOG" | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{\"content\":\"❌ Broadcast 이미지 빌드/푸시 실패\n\`\`\`\n$ESCAPED_LOG\n\`\`\`\"}" \
+          https://discord.com/api/webhooks/1390598514014163077/exggNPQZfZxyQ3e0gliUN7WI7gaZ2cqHvgD2-6ynoa8KKQ0FKpyveGdMEBU7QgA62P-0
+        # secrets.DISCORD_WEBSOCKET_WEBHOOK_URL <- 변수 생성 후 변경
