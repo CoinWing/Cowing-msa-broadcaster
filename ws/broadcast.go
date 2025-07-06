@@ -4,9 +4,11 @@ import (
 	"log"
 )
 
-func BroadcastToClients(message []byte) {
+func BroadcastToClients(messageType int, message []byte) {
 	for conn := range clients {
-		err := conn.WriteMessage(1, message) // 1 = TextMessage
+		// Upbit로부터 받은 메시지 타입을 그대로 사용
+		// BinaryMessage(2) 또는 TextMessage(1)를 그대로 전달
+		err := conn.WriteMessage(messageType, message)
 		if err != nil {
 			log.Println("❌ 클라이언트 전송 실패:", err)
 			conn.Close()
