@@ -6,7 +6,7 @@
 <body>
   <h2>실시간 코인 데이터 콘솔 확인</h2>
   <script>
-    const socket = new WebSocket("ws://localhost:8081/ws");
+    const socket = new WebSocket("ws://localhost:8083/ws");
 
     socket.onopen = () => {
       console.log("✅ 연결됨");

@@ -17,8 +17,8 @@ func main() {
 
 	// WebSocket 서버 실행 (8081 포트에서 프론트 요청 받음)
 	go func() {
-		log.Println("WebSocket 서버 시작: ws://localhost:8081/ws")
-		if err := http.ListenAndServe(":8081", nil); err != nil {
+		log.Println("WebSocket 서버 시작: ws://localhost:8083/ws")
+		if err := http.ListenAndServe(":8083", nil); err != nil {
 			log.Fatal("ListenAndServe error:", err)
 		}
 	}()

@@ -17,6 +17,6 @@ RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/
 
 COPY --from=builder /app/proxy-broadcast .
 
-EXPOSE 8081
+EXPOSE 8083
 
 CMD ["./proxy-broadcast"]
