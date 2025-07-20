@@ -24,4 +24,4 @@ jobs:
             docker stop proxy-broadcast || true
             docker rm proxy-broadcast || true
             docker build -t proxy-broadcast .
-            docker run -d -p 8085:8085 --name proxy-broadcast proxy-broadcast
+            docker run -d -p 8081:8081 --name proxy-broadcast proxy-broadcast
