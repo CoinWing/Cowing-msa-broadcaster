@@ -22,9 +22,9 @@ func StartUpbitWebSocket() {
 	// 모든 마켓 받아오기
 	markets := GetAllMarkets()
 
-	// 구독 메시지 생성
-	subscribeMsg := []map[string]interface{}{
-		{"ticket": "all-market"},
+	// ticker 구독 메시지 생성
+	tickerSubscribeMsg := []map[string]interface{}{
+		{"ticket": "ticker-subscription"},
 		{
 			"type":           "ticker",
 			"codes":          markets,
@@ -32,13 +32,28 @@ func StartUpbitWebSocket() {
 		},
 	}
 
-	msgBytes, _ := json.Marshal(subscribeMsg)
-
-	if err := conn.WriteMessage(websocket.TextMessage, msgBytes); err != nil {
-		log.Fatal("Write error:", err)
+	// orderbook 구독 메시지 생성
+	orderbookSubscribeMsg := []map[string]interface{}{
+		{"ticket": "orderbook-subscription"},
+		{
+			"type":  "orderbook",
+			"codes": markets,
+		},
 	}
 
-	conn.WriteMessage(websocket.TextMessage, msgBytes)
+	// ticker 구독
+	tickerMsgBytes, _ := json.Marshal(tickerSubscribeMsg)
+	if err := conn.WriteMessage(websocket.TextMessage, tickerMsgBytes); err != nil {
+		log.Fatal("Ticker subscribe error:", err)
+	}
+
+	// orderbook 구독
+	orderbookMsgBytes, _ := json.Marshal(orderbookSubscribeMsg)
+	if err := conn.WriteMessage(websocket.TextMessage, orderbookMsgBytes); err != nil {
+		log.Fatal("Orderbook subscribe error:", err)
+	}
+
+	log.Println("📡 Upbit WebSocket 구독 완료 (ticker + orderbook)")
 
 	// 메시지 수신 루프
 	for {
@@ -60,7 +75,8 @@ func StartUpbitWebSocket() {
 				continue
 			}
 			// 로그 출력 (선택적)
-			// log.Printf("[Ticker] %s | Price: %v | Volume: %v\n",
+			// log.Printf("[%s] %s | Price: %v | Volume: %v\n",
+			// 	result["type"],
 			// 	result["code"],
 			// 	result["trade_price"],
 			// 	result["acc_trade_volume"],
