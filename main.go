@@ -10,14 +10,14 @@ import (
 )
 
 func main() {
-	log.Println("Starting Upbit WebSocket client and frontend server...")
+	log.Println("Starting Upbit WebSocket Broadcaster...")
 
 	// 프론트 요청을 받을 WebSocket 핸들러 등록
-	http.HandleFunc("/ws", ws.ServeClient)
+	http.HandleFunc("/ws", ws.HttpToWebSocketHandler)
 
 	// WebSocket 서버 실행 (8081 포트에서 프론트 요청 받음)
 	go func() {
-		log.Println("WebSocket 서버 시작: ws://localhost:8083/ws")
+		log.Println("WebSocket Broadcaster Server Start: ws://localhost:8083/ws")
 		if err := http.ListenAndServe(":8083", nil); err != nil {
 			log.Fatal("ListenAndServe error:", err)
 		}
