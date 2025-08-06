@@ -17,6 +17,9 @@ RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/
 
 COPY --from=builder /app/proxy-broadcast .
 
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD wget --spider -q http://localhost:8083/health || exit 1
+
 EXPOSE 8083
 
 CMD ["./proxy-broadcast"]

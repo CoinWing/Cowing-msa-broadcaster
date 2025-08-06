@@ -15,6 +15,12 @@ func main() {
 	// 프론트 요청을 받을 WebSocket 핸들러 등록
 	http.HandleFunc("/ws", ws.HttpToWebSocketHandler)
 
+	// healthcheck endpoint
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+        w.WriteHeader(http.StatusOK)
+        w.Write([]byte("OK"))
+    })
+
 	// WebSocket 서버 실행 (8081 포트에서 프론트 요청 받음)
 	go func() {
 		log.Println("WebSocket Broadcaster Server Start: ws://localhost:8083/ws")
